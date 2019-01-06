@@ -1,0 +1,16 @@
+{
+  "name": "vue-ssr-proj",
+  "version": "1.0.0",
+  "description": "a sever-side rendering project with express as back-end server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "vue": "^2.5.21",
+    "vue-server-renderer": "^2.5.21"
+  }
+}
