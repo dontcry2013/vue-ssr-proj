@@ -1,10 +1,9 @@
 const Vue = require('vue')
+import App from './App.vue'
 
-module.exports = function createApp (context) {
-	return new Vue({
-		data: {
-			url: context.url
-		},
-		template: `<div>The visited URL is : {{ url }}</div>`
+export function createApp (context) {
+	const app = new Vue({
+		render: h => h(App)
 	})
+	return {app}
 }
