@@ -1,11 +1,16 @@
 <template>
-	
+  <div id="app">
+    Hello world!
+    <p>
+      <router-link to="/"> Home </router-link>
+      <router-link to="/about"> About </router-link>
+    </p>
+    <router-view></router-view>
+  </div>
 </template>
+
 <script>
-	export default{
-		data: {
-			url: 'context.url'
-		},
-		template: `<div>The visited URL is : {{ url }}</div>`
-	}
+export default {
+  
+}
 </script>

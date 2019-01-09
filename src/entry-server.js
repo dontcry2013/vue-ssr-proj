@@ -1,15 +1,17 @@
-import { createApp } from './app'
+import { createApp } from './main.js'
 
-export default context => {
-	return new Promise((resolve, reject) => {
-		const { app, router } = createApp()
+export default function(context){
+	return new Promise(function(resolve, reject){
+		const { app, router } = createApp();
+
 		router.push(context.url)
-		router.onReady(() => {
-			const matchedComponents = router.getMatchedComponents()
-			if(!matchedComponents){
+
+		router.onReady(function(){
+			const matchedComponents = router.getMatchedComponents();
+			if(!matchedComponents.length){
 				return reject({ code: 404 })
 			}
 			resolve(app)
 		}, reject)
-	})
+	});
 }
