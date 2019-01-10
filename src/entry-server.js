@@ -2,7 +2,7 @@ import { createApp } from './main.js'
 
 export default function(context){
 	return new Promise(function(resolve, reject){
-		const { app, router } = createApp();
+		const { app, router, store } = createApp();
 
 		router.push(context.url)
 
@@ -11,7 +11,20 @@ export default function(context){
 			if(!matchedComponents.length){
 				return reject({ code: 404 })
 			}
-			resolve(app)
+
+			Promise.all(matchedComponents.map(Component => {
+				if(Component.asyncData){
+					console.log('from entry-server', router.currentRoute.params)
+					return Component.asyncData({
+						store,
+						route: router.currentRoute
+					})
+				}
+			})).then(() => {
+				context.state = store.state
+				resolve(app)
+			})
+			
 		}, reject)
 	});
 }

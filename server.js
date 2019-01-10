@@ -13,10 +13,10 @@ server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
 
 
 server.get('*', function(req, res){
+	console.log(req.url)
 	bundle.default({ url: req.url }).then(function(app){
 		const context = {
 			title: 'this is a great title',
-			// msg: 'hello'
 		}
 		renderer.renderToString(app, context, function(err, html){
 			if(err){
@@ -26,7 +26,8 @@ server.get('*', function(req, res){
 			}
 		}); //end of renderer
 	}, function(err){
-		console.error('reject', err)
+		console.log('reject', err)
+		res.end('the sevrver can not solve the request, code:' + err.code)
 	})
 })
 
