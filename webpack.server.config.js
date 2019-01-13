@@ -1,28 +1,25 @@
-var path = require('path')
-var webpack = require('webpack')
-var merge = require('webpack-merge')
+const merge = require('webpack-merge')
+const path = require('path')
+const webpack = require('webpack')
+// const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+
 var baseWebpackConfig = require('./webpack.config')
 var webpackConfig = merge(baseWebpackConfig, {
 	target: 'node',
 	entry: {
 		app: './src/entry-server.js'
 	},
-	devtool: false,
+	// devtool: 'source-map',
 	output: {
 		path: path.resolve(__dirname, './dist'),
 		filename: 'server.bundle.js',
 		libraryTarget: 'commonjs2'
 	},
-	externals: Object.keys(require('./package.json').dependencies),
+	externals: {
+		whitelist: /\.css$/
+	},
 	plugins: [
-		new webpack.DefinePlugin({
-			'process.env': 'production'
-		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false
-			}
-		})
+		// new VueSSRServerPlugin()
 	],
 })
 module.exports = webpackConfig

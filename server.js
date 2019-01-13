@@ -8,6 +8,13 @@ const renderer = require('vue-server-renderer').createRenderer({
 	template: fs.readFileSync('./index.html', 'utf-8')
 })
 
+
+// const { createBundleRenderer } = require('vue-server-renderer')
+// const renderer = createBundleRenderer(bundle, {
+// 	runInNewContext: false,
+// 	template: fs.readFileSync('./index.html', 'utf-8'),
+// })
+
 server.use('/dist', express.static(path.join(__dirname, './dist')))
 server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
 

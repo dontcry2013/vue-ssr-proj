@@ -3,12 +3,11 @@ var webpack = require('webpack')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: './src/entry-client.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js'
   },
+  devtool: false,
   module: {
     rules: [
       {
@@ -84,32 +83,30 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: 'src/assets', to: 'assets' }
+    ]),
+  ],
 }
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
-  // module.exports.plugins = (module.exports.plugins || []).concat([
-  //   new webpack.DefinePlugin({
-  //     'process.env': {
-  //       NODE_ENV: '"production"'
-  //     }
-  //   }),
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     sourceMap: true,
-  //     compress: {
-  //       warnings: false
-  //     }
-  //   }),
-  //   new webpack.LoaderOptionsPlugin({
-  //     minimize: true
-  //   }),
-  // ])
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    }),
+  ])
 }
-
-module.exports.plugins = (module.exports.plugins || []).concat([
-  new CopyWebpackPlugin([
-    { from: 'src/assets', to: 'assets' }
-  ]),
-])
