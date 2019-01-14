@@ -1,25 +1,18 @@
+const { join, resolve } = require('path')
 const merge = require('webpack-merge')
-const path = require('path')
-const webpack = require('webpack')
-// const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+const baseWebpackConfig = require('./webpack.config')
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 
-var baseWebpackConfig = require('./webpack.config')
-var webpackConfig = merge(baseWebpackConfig, {
+module.exports = merge(baseWebpackConfig, {
 	target: 'node',
 	entry: {
 		app: './src/entry-server.js'
 	},
-	// devtool: 'source-map',
 	output: {
-		path: path.resolve(__dirname, './dist'),
-		filename: 'server.bundle.js',
-		libraryTarget: 'commonjs2'
-	},
-	externals: {
-		whitelist: /\.css$/
+	    filename: 'server.js',
+	    libraryTarget: 'commonjs2'
 	},
 	plugins: [
-		// new VueSSRServerPlugin()
+		new VueSSRServerPlugin()
 	],
 })
-module.exports = webpackConfig

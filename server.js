@@ -1,19 +1,22 @@
 const express = require('express')
 const server = express()
 const favicon = require('serve-favicon')
-const fs = require('fs')
 const path = require('path')
-const bundle = require('./dist/server.bundle.js')
-const renderer = require('vue-server-renderer').createRenderer({
-	template: fs.readFileSync('./index.html', 'utf-8')
-})
-
-
-// const { createBundleRenderer } = require('vue-server-renderer')
-// const renderer = createBundleRenderer(bundle, {
-// 	runInNewContext: false,
-// 	template: fs.readFileSync('./index.html', 'utf-8'),
+// const bundle = require('./dist/server.bundle.js')
+// const renderer = require('vue-server-renderer').createRenderer({
+// 	template: fs.readFileSync('./index.html', 'utf-8')
 // })
+const template = require('fs').readFileSync('./index.html', 'utf-8')
+const serverBundle = require('./dist/vue-ssr-server-bundle.json')
+const clientManifest = require('./dist/vue-ssr-client-manifest.json')
+
+
+const { createBundleRenderer } = require('vue-server-renderer')
+const renderer = createBundleRenderer(serverBundle, {
+	runInNewContext: false,
+	template,
+	clientManifest
+})
 
 server.use('/dist', express.static(path.join(__dirname, './dist')))
 server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
@@ -21,21 +24,21 @@ server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
 
 server.get('*', function(req, res){
 	console.log(req.url)
-	bundle.default({ url: req.url }).then(function(app){
-		const context = {
-			title: 'this is a great title',
+	const context = { 
+		url: req.url, 
+		title: 'this is a great title', 
+	}
+	renderer.renderToString(context, function(err, html){
+		if(err){
+			console.log('[server] err: ', err)
+			res.status(500).end('error has been detected')
+		} else{
+			res.end(html)
 		}
-		renderer.renderToString(app, context, function(err, html){
-			if(err){
-				res.status(500).end('error has been detected')
-			} else{
-				res.end(html)
-			}
-		}); //end of renderer
-	}, function(err){
-		console.log('reject', err)
-		res.end('the sevrver can not solve the request, code:' + err.code)
 	})
+
 })
 
-server.listen(8080)
+server.listen(8080, () => {
+	console.log('Server started on port', 8080)
+})
