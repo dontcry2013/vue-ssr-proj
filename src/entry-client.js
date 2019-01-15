@@ -1,5 +1,12 @@
 import Vue from 'vue'
-import { createApp } from './main.js'
+import { createApp } from './main'
+
+const { app, router, store } = createApp()
+
+if(window.__INITIAL_STATE__){
+	console.log('from entry-client', window.__INITIAL_STATE__)
+	store.replaceState(window.__INITIAL_STATE__)
+}
 
 Vue.mixin({
   	beforeRouteUpdate (to, from, next) {
@@ -15,12 +22,33 @@ Vue.mixin({
 	}
 })
 
+router.onReady(() => {
+  router.beforeResolve((to, from, next) => {
+    const matchedComponents = router.getMatchedComponents(to);
+    const prevMatchedComponents = router.getMatchedComponents(from);
 
-const { app, router, store } = createApp()
+    let diffed = false;
 
-if(window.__INITIAL_STATE__){
-	console.log('from entry-client', window.__INITIAL_STATE__)
-	store.replaceState(window.__INITIAL_STATE__)
-}
+    const activated = matchedComponents.filter((component, i) => {
+      return diffed || (diffed = prevMatchedComponents[i] !== component);
+    });
 
-app.$mount('#app')
+    if (!activated.length) {
+      return next();
+    }
+
+    Promise.all(
+      activated.map(component => {
+        if (component.asyncData) {
+          return component.asyncData({ store, route: to });
+        }
+      })
+    )
+      .then(() => {
+        next();
+      })
+      .catch(next);
+  });
+
+  app.$mount('#app');
+});

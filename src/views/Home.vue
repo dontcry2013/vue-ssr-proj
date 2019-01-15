@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import Kitten from '../components/Kitten.vue';
+import KittenItem from '../components/KittenItem.vue';
 
 export default {
   components: {
-    'app-kitten': Kitten,
+    'app-kitten': KittenItem,
   },
 
   computed: {

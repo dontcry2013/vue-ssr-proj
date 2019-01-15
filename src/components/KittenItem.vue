@@ -1,5 +1,5 @@
 <template>
-<router-link tag="article" class="kitten" :to="{ name: 'item', params: { id: data.id } }">
+<router-link tag="article" class="kitten" :to="{ name: 'kitten', params: { id: data.id } }">
   <div class="kitten__background">
     <div class="kitten__row">
       <h1 class="kitten__title">{{ data.title }}</h1>

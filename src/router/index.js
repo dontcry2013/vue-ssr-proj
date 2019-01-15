@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import VueMeta from 'vue-meta';
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import Item from '../views/Item.vue'
+import Kitten from '../views/Kitten.vue'
 import Whatever from '../views/Whatever.vue'
 import NotFound from '../views/NotFound.vue'
 
@@ -13,15 +13,16 @@ Vue.use(VueMeta)
 export function createRouter(){
 	return new Router({
 		mode: 'history',
-		/*scrollBehavior() {
+		scrollBehavior() {
 	      return { y: 0 };
 	    },
-		linkActiveClass: 'menu__item_active',*/
+		linkActiveClass: 'menu__item_active',
 		routes: [
 			{ path: '/', name: 'home', component: Home },
 			{ path: '/about', name: 'about', component: About },
 			{ path: '/whatever', name: 'whatever', component: Whatever },
-			{ path: '/item/:id(\\d+)', name: 'item', props: true, component: Item },
+			// { path: '/item/:id(\\d+)', name: 'item', props: true, component: Item },
+			{ path: '/kitten/:id', name: 'kitten', props: true, component: Kitten },
 			{ path: '*',component: NotFound },
 		]
 	})

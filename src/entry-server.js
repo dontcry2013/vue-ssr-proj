@@ -1,8 +1,9 @@
-import { createApp } from './main.js'
+import { createApp } from './main'
 
 export default function(context){
 	return new Promise(function(resolve, reject){
-		const { app, router, store } = createApp();
+    const { app, router, store } = createApp(context);
+    const meta = app.$meta();
 
 		router.push(context.url)
 
@@ -22,9 +23,9 @@ export default function(context){
 				}
 			})).then(() => {
 				context.state = store.state
+		        context.meta = meta;
 				resolve(app)
-			})
-			
+			}).catch(reject);
 		}, reject)
 	});
 }
