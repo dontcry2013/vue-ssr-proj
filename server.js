@@ -2,9 +2,10 @@ const express = require('express')
 const server = express()
 const favicon = require('serve-favicon')
 const { resolve, join } = require('path')
-const template = require('fs').readFileSync('./index.html', 'utf-8')
+const fs = require('fs')
 const serverBundle = require('./dist/vue-ssr-server-bundle.json')
 const clientManifest = require('./dist/vue-ssr-client-manifest.json')
+const template = fs.readFileSync('./index.html', 'utf-8')
 
 
 const { createBundleRenderer } = require('vue-server-renderer')
@@ -16,6 +17,16 @@ const renderer = createBundleRenderer(serverBundle, {
 
 server.use('/dist', express.static(join(__dirname, './dist')))
 server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
+
+server.get('/json/tiles', (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+
+  fs
+    .createReadStream(join(__dirname, './json/tiles.json'), {
+      encoding: 'utf-8',
+    })
+    .pipe(response);
+});
 
 
 server.get('*', function(req, res){

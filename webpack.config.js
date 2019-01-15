@@ -1,10 +1,11 @@
-var path = require('path')
-var webpack = require('webpack')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
+const { resolve } = require('path')
+const webpack = require('webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: '[name].[chunkhash].js'
   },
@@ -52,8 +53,8 @@ module.exports = {
               'css-loader',
               'sass-loader?indentedSyntax'
             ]
-          }
-          // other vue-loader options go here
+          },
+          // extractCSS: isProduction
         }
       },
       {
@@ -91,7 +92,7 @@ module.exports = {
   ],
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   module.exports.devtool = 'source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
