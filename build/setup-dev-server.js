@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const MFS = require('memory-fs')
 const clientConfig = require('./webpack.client.config')
 const serverConfig = require('./webpack.server.config')
+const fs = require('fs')
 
 module.exports = function setupDevServer (app, cb) {
   let bundle
@@ -27,10 +28,11 @@ module.exports = function setupDevServer (app, cb) {
   })
   app.use(devMiddleware)
   clientCompiler.plugin('done', () => {
-    const fs = devMiddleware.fileSystem
+    // const fs = devMiddleware.fileSystem
     const filePath = path.join(clientConfig.output.path, '../index.html')
-    console.log('path of template:', filePath, fs.existsSync(filePath))
-    if (fs.existsSync(filePath)) {
+    const ifExist = fs.existsSync(filePath)
+    console.log('path of template:', filePath, ifExist)
+    if (ifExist) {
       template = fs.readFileSync(filePath, 'utf-8')
       if (bundle) {
         cb(bundle, template)

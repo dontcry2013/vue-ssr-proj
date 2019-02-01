@@ -12,7 +12,7 @@
 <template>
 	<div id="app" class="app-layout">
 	  <noscript>
-	    Please, enable JavaScript in your browser
+	    Please, enable JavaScript in your browser!!!
 	  </noscript>
 
 	  <header>

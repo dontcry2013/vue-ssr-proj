@@ -7,7 +7,7 @@
     export default {
         data() {
             return {
-                aboutText: 'About Component'
+                aboutText: 'About Component',
             };
         }
     };
