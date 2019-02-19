@@ -3,6 +3,8 @@
   <router-link :to="{ name: 'home' }" class="menu__item" exact>Home</router-link>
   <router-link :to="{ name: 'about' }" class="menu__item">About</router-link>
   <router-link :to="{ name: 'whatever' }" class="menu__item">Whatever</router-link>
+
+
 </nav>
 </template>
 

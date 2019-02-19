@@ -7,9 +7,6 @@ const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 var webpackClientConfig = merge(baseWebpackConfig, {
   entry: './src/entry-client.js',
-  output: {
-    // filename: 'client.js',
-  },
   plugins: [
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
