@@ -7,7 +7,7 @@ const { resolve, join } = require('path')
 const { createBundleRenderer } = require('vue-server-renderer')
 
 const isProd = process.env.NODE_ENV === 'production'
-const server = express()
+const app = express()
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
@@ -28,9 +28,9 @@ let renderer
 let readyPromise
 const templatePath = resolve('./index.html')
 if (isProd) {
-	const serverBundle = require('./dist/vue-ssr-server-bundle.json')
-	const clientManifest = require('./dist/vue-ssr-client-manifest.json')
 	const template = fs.readFileSync(templatePath, 'utf-8')
+	const bundle = require('./dist/vue-ssr-server-bundle.json')
+	const clientManifest = require('./dist/vue-ssr-client-manifest.json')
   	renderer = createRenderer(bundle, {
 	    template,
 	    clientManifest
@@ -39,7 +39,7 @@ if (isProd) {
 	// In development: setup the dev server with watch and hot-reload,
 	// and create a new renderer on bundle / index template update.
 	readyPromise = require('./build/setup-dev-server')(
-		server, 
+		app, 
 		templatePath, 
 		(bundle, options) => {
 			renderer = createRenderer(bundle, options)
@@ -48,10 +48,10 @@ if (isProd) {
 }
 
 
-server.use('/dist', express.static(join(__dirname, './dist')))
-server.use(favicon(__dirname + '/dist/assets/favicon.ico'));
+app.use('/dist', express.static(join(__dirname, './dist')))
+app.use(favicon(__dirname + '/dist/assets/favicon.ico'));
 
-server.get('/json/tiles', (request, response) => {
+app.get('/json/tiles', (request, response) => {
 	response.writeHead(200, { 'Content-Type': 'application/json' });
 
 	fs.createReadStream(join(__dirname, './json/tiles.json'), {
@@ -93,12 +93,11 @@ function render (req, res) {
 	})
 }
 
-server.get('*', function(req, res){
-	console.log(req.url)
-	readyPromise.then(() => render(req, res))
+app.get('*', isProd ? render : (req, res) => {
+  readyPromise.then(() => render(req, res))
 })
 
 const port = process.env.PORT || 8080
-server.listen(port, () => {
+app.listen(port, () => {
 	console.log(`server started at localhost:${port}`)
 })
